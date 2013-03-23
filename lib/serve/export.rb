@@ -11,6 +11,7 @@ module Serve
     def initialize(options={})
       @input  = normalize_path(options[:input])
       @output = normalize_path(options[:output])
+      @is_subdirectory = options[:subdirectory]
     end
     
     def process
@@ -90,9 +91,14 @@ module Serve
         to_path   = "#{@output}/#{remove_ext(filename)}.html"
         
         ensure_path to_path
-        
+
         lines = IO.read(from_path).strip.split("\n")
         url = lines.pop.strip
+
+        if @is_subdirectory && url =~ /^\// # subdirectory flag has been passed and the redirect starts with a /
+          url = ".#{url}"
+        end
+
         contents = %{<html><head><meta http-equiv="refresh" content="0;#{url}" /></head></html>}
         
         File.open(to_path, 'w+') { |f| f.puts contents }

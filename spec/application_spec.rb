@@ -117,18 +117,38 @@ describe Serve::Application do
         params = parse('export input output')[:export]
         params[:input].should == 'input'
         params[:output].should == 'output'
+        params[:subdirectory].should be_false
       end
       
       it "export with just an output directory" do
         params = parse('export output')[:export]
         params[:input].should == '.'
         params[:output].should == 'output'
+        params[:subdirectory].should be_false
+      end
+
+      it "export with with standard arguments and subdirectory" do
+        params = parse('export input output --subdirectory')[:export]
+        params[:input].should == 'input'
+        params[:output].should == 'output'
+        params[:subdirectory].should be_true
+      end
+
+      it "export with only subdirectory flag" do
+        params = parse('export --subdirectory')[:export]
+        params[:subdirectory].should be_true
+      end
+
+      it 'export with alternate subdirectory flag' do
+        params = parse('export -s')[:export]
+        params[:subdirectory].should be_true
       end
       
       it "export with no arguments" do
         params = parse('export')[:export]
         params[:input].should == '.'
         params[:output].should == 'html'
+        params[:subdirectory].should be_false
       end
     end
     

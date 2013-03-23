@@ -50,15 +50,15 @@ module Serve
     
     def parse(args)
       args = normalize_args(args)
-      options[:help]        = extract_boolean(args, '-h', '--help')
-      options[:version]     = extract_boolean(args, '-v', '--version')
-      options[:create]      = extract_create(args)
-      options[:convert]     = extract_convert(args)
-      options[:export]      = extract_export(args)
-      options[:environment] = extract_environment(args)
-      options[:root]        = extract_root(args)
-      options[:address]     = extract_address(args)
-      options[:port]        = extract_port(args)
+      options[:help]         = extract_boolean(args, '-h', '--help')
+      options[:version]      = extract_boolean(args, '-v', '--version')
+      options[:create]       = extract_create(args)
+      options[:convert]      = extract_convert(args)
+      options[:export]       = extract_export(args)
+      options[:environment]  = extract_environment(args)
+      options[:root]         = extract_root(args)
+      options[:address]      = extract_address(args)
+      options[:port]         = extract_port(args)
       raise InvalidArgumentsError if args.size > 0
       options
     end
@@ -225,12 +225,14 @@ module Serve
       
       def extract_export(args)
         if args.delete('export')
+          subdirectory = extract_boolean args, '-s', '--subdirectory'
           input, output = args.shift, args.shift
           input, output = '.', input if output.nil?
           output ||= 'html'
           {
             :input => input,
-            :output => output
+            :output => output,
+            :subdirectory => subdirectory
           }
         end
       end
